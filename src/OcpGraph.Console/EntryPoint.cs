@@ -30,6 +30,6 @@ public static class EntryPoint
         
         stopwatch.Stop();
         
-        WriteLine($"{count} map objects indexed in {stopwatch.Elapsed.TotalSeconds}s.");
+        WriteLine($"{count:N0} map objects indexed in {stopwatch.Elapsed.TotalSeconds}s.");
     }
 }
