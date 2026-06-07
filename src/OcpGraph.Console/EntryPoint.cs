@@ -8,7 +8,7 @@ public static class EntryPoint
 {
     public static void Main()
     {
-        var provider = new OsmMapDataProvider();
+        IMapDataProvider provider = new OsmMapDataProvider();
         
         var count = 0;
         
