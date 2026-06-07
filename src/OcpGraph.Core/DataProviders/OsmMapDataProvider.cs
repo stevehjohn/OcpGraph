@@ -20,10 +20,26 @@ public class OsmMapDataProvider : IMapDataProvider
         {
             if (type == null || element.Type == type)
             {
-                yield return new MapNode(element.Id.Value);
+                var item = Translate(element);
+
+                if (item != null)
+                {
+                    yield return item;
+                }
             }
 
             Progress = fileStream.Position * 100.0 / fileStream.Length;
         }
+    }
+
+    private static MapObject Translate(OsmGeo item)
+    {
+        switch (item.Type)
+        {
+            case OsmGeoType.Way:
+                return new MapWay(item as Way);
+        }
+        
+        return null;
     }
 }
