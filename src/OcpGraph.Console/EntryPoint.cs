@@ -24,12 +24,12 @@ public static class EntryPoint
             {
                 lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
                 
-                WriteLine($"{count}");
+                WriteLine($"{count:N0} {stopwatch.Elapsed.TotalSeconds}");
             }
         }
         
         stopwatch.Stop();
         
-        WriteLine($"{count} map objects indexed in {stopwatch.ElapsedMilliseconds}ms.");
+        WriteLine($"{count} map objects indexed in {stopwatch.Elapsed.TotalSeconds}s.");
     }
 }
