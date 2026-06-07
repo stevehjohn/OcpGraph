@@ -1,4 +1,4 @@
-# OcpGraph
+# Ocp Graph
 
 A GPS implementation experiment.
 
