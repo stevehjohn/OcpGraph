@@ -24,7 +24,7 @@ public static class EntryPoint
             {
                 lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
                 
-                WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds}s");
+                WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds}s, ({provider.Progress:N2}%).");
             }
         }
         

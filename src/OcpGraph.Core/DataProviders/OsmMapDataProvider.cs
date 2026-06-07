@@ -5,18 +5,24 @@ namespace OcpGraph.Core.DataProviders;
 
 public class OsmMapDataProvider : IMapDataProvider
 {
+    public double Progress { get; private set; }
+    
     public IEnumerable<MapObject> Read()
     {
         using var fileStream = new FileInfo("./data/great-britain.osm.pbf").OpenRead();
         
-        var source = new PBFOsmStreamSource(fileStream);
+        var stream = new PBFOsmStreamSource(fileStream);
         
-        foreach (var element in source)
+        Progress = 0;
+        
+        foreach (var element in stream)
         {
             if (element.Id != null)
             {
                 yield return new MapNode(element.Id.Value);
             }
+
+            Progress = fileStream.Position * 100.0 / fileStream.Length;
         }
     }
 }
