@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using OcpGraph.Core.DataProviders;
+using OsmSharp;
 using static System.Console;
 
 namespace OcpGraph.Console;
@@ -16,7 +17,7 @@ public static class EntryPoint
         
         var lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
         
-        foreach (var mapObject in provider.Read())
+        foreach (var mapObject in provider.Read(OsmGeoType.Way))
         {
             count++;
 
