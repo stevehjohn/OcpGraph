@@ -1,4 +1,5 @@
 using OcpGraph.Core.Models;
+using OsmSharp;
 using OsmSharp.Streams;
 
 namespace OcpGraph.Core.DataProviders;
@@ -7,7 +8,7 @@ public class OsmMapDataProvider : IMapDataProvider
 {
     public double Progress { get; private set; }
     
-    public IEnumerable<MapObject> Read()
+    public IEnumerable<MapObject> Read(OsmGeoType? type = null)
     {
         using var fileStream = new FileInfo(Path.Combine(AppContext.BaseDirectory, "data", "gb.osm.pbf")).OpenRead();
         
@@ -17,7 +18,7 @@ public class OsmMapDataProvider : IMapDataProvider
         
         foreach (var element in stream)
         {
-            if (element.Id != null)
+            if (type == null || element.Type == type)
             {
                 yield return new MapNode(element.Id.Value);
             }

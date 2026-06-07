@@ -1,3 +1,3 @@
 namespace OcpGraph.Core.Models;
 
-public abstract record MapObject(long Id);
+public abstract record MapObject(long? Id);
