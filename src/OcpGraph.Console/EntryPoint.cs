@@ -1,8 +1,35 @@
-﻿namespace OcpGraph.Console;
+﻿using System.Diagnostics;
+using OcpGraph.Core.DataProviders;
+using static System.Console;
+
+namespace OcpGraph.Console;
 
 public static class EntryPoint
 {
     public static void Main()
     {
+        var provider = new OsmMapDataProvider();
+        
+        var count = 0;
+        
+        var stopwatch = Stopwatch.StartNew();
+        
+        var lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
+        
+        foreach (var mapObject in provider.Read())
+        {
+            count++;
+
+            if (stopwatch.ElapsedMilliseconds - lastUpdateMilliseconds > 500)
+            {
+                lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
+                
+                WriteLine($"{count}");
+            }
+        }
+        
+        stopwatch.Stop();
+        
+        WriteLine($"{count} map objects indexed in {stopwatch.ElapsedMilliseconds}ms.");
     }
 }

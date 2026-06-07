@@ -7,7 +7,7 @@ public class OsmMapDataProvider : IMapDataProvider
 {
     public IEnumerable<MapObject> Read()
     {
-        using var fileStream = new FileInfo("great-britain.osm.pbf").OpenRead();
+        using var fileStream = new FileInfo("./data/great-britain.osm.pbf").OpenRead();
         
         var source = new PBFOsmStreamSource(fileStream);
         

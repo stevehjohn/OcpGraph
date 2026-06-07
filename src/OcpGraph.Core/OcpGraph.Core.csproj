@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="OsmSharp" Version="6.2.0"/>
         <None Include="../../data/great-britain.osm.pbf">
+            <Link>Data\gb.osm.pbf</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
