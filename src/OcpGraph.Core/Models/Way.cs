@@ -4,17 +4,17 @@ public sealed record Way(long Id) : Object(Id)
 {
     private readonly long[] _nodes;
     
-    public WayType Type { get; private init; }
+    public WayType Type { get; }
     
-    public int NameId { get; private init; }
+    public int NameId { get; }
     
-    public int DesignationId { get; private init; }
+    public int DesignationId { get; }
     
-    public int MaxSpeed { get; private init; }
+    public int MaxSpeed { get; }
     
-    public Direction Direction { get; private init; }
+    public Direction Direction { get; }
     
-    public int NodeCount { get; private init; }
+    public int NodeCount { get; }
     
     public long this[int index] => _nodes[index];
     
