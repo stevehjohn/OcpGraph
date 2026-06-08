@@ -30,7 +30,7 @@ public static class EntryPoint
         {
             Thread.Sleep(100);
             
-            Write($"{graph.Progress}% loaded.");
+            Write($"{graph.Progress:N2}% loaded.");
 
             CursorLeft = 0;
         }
