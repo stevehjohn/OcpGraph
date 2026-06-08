@@ -77,6 +77,8 @@ public static class EntryPoint
                 {
                     wayWriter.Write7BitEncodedInt(0);
                 }
+                
+                wayWriter.Write(way.MaxSpeed ?? 0);
 
                 wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
 
