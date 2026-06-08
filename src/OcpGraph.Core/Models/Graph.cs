@@ -56,21 +56,33 @@ public class Graph
 
     public Way FindNearestWay(double latitude, double longitude)
     {
-        var nearestNode = _nodes.Values
-            .MinBy(node => DistanceSquared(
-                latitude,
-                longitude,
-                node.Latitude,
-                node.Longitude));
+        var namedWays = _ways.Values.Where(way => way.NameId > 0 || way.DesignationId > 0);
 
-        if (nearestNode is null)
+        Way nearestWay = null;
+        
+        var nearestDistance = double.MaxValue;
+
+        foreach (var way in namedWays)
         {
-            throw new InvalidOperationException("The graph contains no nodes.");
+            for (var i = 0; i < way.NodeCount; i++)
+            {
+                if (!_nodes.TryGetValue(way[i], out var node))
+                {
+                    continue;
+                }
+
+                var distance = DistanceSquared(latitude, longitude, node.Latitude, node.Longitude);
+
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    
+                    nearestWay = way;
+                }
+            }
         }
 
-        var nearestWay = _ways.Values.FirstOrDefault(way => ContainsNode(way, nearestNode.Id));
-
-        return nearestWay ?? throw new InvalidOperationException($"No way references node {nearestNode.Id}.");
+        return nearestWay ?? throw new InvalidOperationException("The graph contains no named ways.");
     }
 
     public string GetName(Way way)
