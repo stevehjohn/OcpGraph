@@ -3,40 +3,54 @@ namespace OcpGraph.Core.Models;
 public class Graph
 {
     private readonly Dictionary<int, string> _names = [];
-    
+
     private readonly Dictionary<long, Node> _nodes = [];
-    
+
     private readonly Dictionary<long, Way> _ways = [];
 
-    public Graph()
+    public float Progress { get; private set; }
+
+    public void LoadData()
     {
         using var wayReader = new BinaryReader(File.Open("./data/ways.ogc", FileMode.Open));
 
+        using var nodeReader = new BinaryReader(File.Open("./data/nodes.ogc", FileMode.Open));
+
+        using var nameReader = new BinaryReader(File.Open("./data/names.ogc", FileMode.Open));
+        
+        var totalSize = wayReader.BaseStream.Length + nodeReader.BaseStream.Length + nameReader.BaseStream.Length;
+        
         while (wayReader.BaseStream.Position != wayReader.BaseStream.Length)
         {
             var way = new Way(wayReader);
-            
+
             _ways.Add(way.Id, way);
+            
+            Progress = wayReader.BaseStream.Position * 100f / totalSize;
         }
         
-        using var nodeReader = new BinaryReader(File.Open("./data/nodes.ogc", FileMode.Open));
+        var read = wayReader.BaseStream.Position;
 
         while (nodeReader.BaseStream.Position != nodeReader.BaseStream.Length)
         {
             var node = new Node(nodeReader);
-            
+
             _nodes.Add(node.Id, node);
+            
+            Progress = (read + nodeReader.BaseStream.Position) * 100f / totalSize;
         }
         
-        using var nameReader = new BinaryReader(File.Open("./data/names.ogc", FileMode.Open));
+        read += nodeReader.BaseStream.Position;
 
         while (nameReader.BaseStream.Position != nameReader.BaseStream.Length)
         {
             var id = nameReader.Read7BitEncodedInt();
-            
+
             var name = nameReader.ReadString();
-            
+
             _names.Add(id, name);
+            
+            Progress = (read + nameReader.BaseStream.Position) * 100f / totalSize;
         }
     }
 }
