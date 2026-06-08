@@ -68,7 +68,7 @@ public class Graph
             throw new InvalidOperationException("The graph contains no nodes.");
         }
 
-        var nearestWay = _ways.Values.FirstOrDefault(way => ContainsNode(way, nearestNode.Id) && way.NameId > 0 && way.DesignationId > 0);
+        var nearestWay = _ways.Values.FirstOrDefault(way => ContainsNode(way, nearestNode.Id));
 
         return nearestWay ?? throw new InvalidOperationException($"No way references node {nearestNode.Id}.");
     }
