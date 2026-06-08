@@ -10,6 +10,8 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
     
     public string Type { get; }
     
+    public int? MaxSpeed { get; }
+    
     public MapWay(Way way) : this(GetId(way.Id), way.Nodes)
     {
         if (way.Tags.TryGetValue("name", out var name))
@@ -25,6 +27,19 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
         if (way.Tags.TryGetValue("highway", out var type))
         {
             Type = type;
+        }
+
+        if (way.Tags.TryGetValue("maxspeed", out var maxSpeed))
+        {
+            var parts = maxSpeed.Split(' ');
+
+            if (parts.Length > 0)
+            {
+                if (int.TryParse(parts[0], out var speed))
+                {
+                    MaxSpeed = speed;
+                }
+            }
         }
     }
 }
