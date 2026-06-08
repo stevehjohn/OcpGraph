@@ -19,6 +19,10 @@
             <Link>Data\names.ogc</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Include="../../data/nodes.ogc">
+            <Link>Data\nodes.ogc</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
