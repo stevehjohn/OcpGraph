@@ -1,5 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using OcpGraph.Console.Tools;
+using OcpGraph.Core.Models;
+using static System.Console;
 
 namespace OcpGraph.Console;
 
@@ -11,6 +14,16 @@ public static class EntryPoint
         if (arguments.Length > 0 && arguments[0] == "convert")
         {
             OsmToOgcConverter.ConvertData();
+            
+            return;
         }
+
+        var stopwatch = Stopwatch.StartNew();
+
+        var graph = new Graph();
+        
+        stopwatch.Stop();
+        
+        Write($"Graph loaded in {stopwatch.Elapsed.TotalMilliseconds}ms");
     }
 }
