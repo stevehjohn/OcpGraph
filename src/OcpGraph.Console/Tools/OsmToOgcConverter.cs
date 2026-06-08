@@ -80,7 +80,7 @@ public static class OsmToOgcConverter
 
                 wayWriter.Write((byte) way.Direction);
 
-                wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
+                wayWriter.Write7BitEncodedInt(way.Nodes.Length);
 
                 foreach (var node in way.Nodes)
                 {

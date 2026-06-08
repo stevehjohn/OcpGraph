@@ -8,11 +8,11 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 
     public string Designation { get; }
 
-    public WayType Type { get; }
+    public WayType Type { get; private init; }
     
-    public Direction Direction { get; } =  Direction.Bidirectional;
+    public Direction Direction { get; private init; } =  Direction.Bidirectional;
 
-    public byte? MaxSpeed { get; }
+    public byte? MaxSpeed { get; private init; }
 
     public MapWay(Way way) : this(GetId(way.Id), way.Nodes)
     {
@@ -66,5 +66,36 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
                 _ => Direction
             };
         }
+    }
+
+    public static MapWay FromData(BinaryReader reader)
+    {
+        var id = reader.Read7BitEncodedInt64();
+
+        var type = (WayType) reader.ReadByte();
+
+        var nameId = reader.Read7BitEncodedInt();
+
+        var designationId = reader.Read7BitEncodedInt();
+
+        var maxSpeed = reader.ReadByte();
+
+        var direction = (Direction) reader.ReadByte();
+
+        var nodeCount = reader.Read7BitEncodedInt();
+        
+        var nodes = new long[nodeCount];
+
+        for (var i = 0; i < nodeCount; i++)
+        {
+            nodes[i] = reader.Read7BitEncodedInt64();
+        }
+
+        return new MapWay(id, nodes)
+        {
+            Type = type,
+            Direction =  direction,
+            MaxSpeed =  maxSpeed
+        };
     }
 }

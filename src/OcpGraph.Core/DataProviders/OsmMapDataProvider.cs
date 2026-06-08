@@ -38,7 +38,6 @@ public class OsmMapDataProvider : IMapDataProvider
         {
             OsmGeoType.Node => new MapNode(item as Node),
             OsmGeoType.Way => new MapWay(item as Way),
-            OsmGeoType.Relation => new MapRelation(item as Relation),
             _ => null
         };
     }
