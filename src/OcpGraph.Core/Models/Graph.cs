@@ -100,19 +100,6 @@ public class Graph
         return "Unknown";
     }
 
-    private static bool ContainsNode(Way way, long nodeId)
-    {
-        for (var i = 0; i < way.NodeCount; i++)
-        {
-            if (way[i] == nodeId)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private static double DistanceSquared(double latitude1, double longitude1, double latitude2, double longitude2)
     {
         var latitudeDifference = latitude1 - latitude2;
