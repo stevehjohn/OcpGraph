@@ -26,6 +26,8 @@ public static class EntryPoint
         var names = new Dictionary<string, int>();
 
         var id = 1;
+
+        var types = new HashSet<string>();
         
         foreach (var mapObject in provider.Read())
         {
@@ -40,6 +42,8 @@ public static class EntryPoint
 
             if (mapObject is MapWay way)
             {
+                types.Add(way.Type);
+                
                 wayWriter.Write7BitEncodedInt64(way.Id);
 
                 if (! string.IsNullOrEmpty(way.Name))
@@ -81,6 +85,11 @@ public static class EntryPoint
                     wayWriter.Write7BitEncodedInt64(node);
                 }
             }
+        }
+
+        foreach (var type in types)
+        {
+            WriteLine(type);
         }
 
         stopwatch.Stop();
