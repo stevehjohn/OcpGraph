@@ -99,6 +99,15 @@ public static class OsmToOgcConverter
 
         foreach (var mapObject in provider.Read())
         {
+            count++;
+
+            if (stopwatch.ElapsedMilliseconds - lastUpdateMilliseconds > 500)
+            {
+                lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
+
+                WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds:N2}s, ({provider.Progress:N2}%).");
+            }
+
             if (mapObject is MapNode node && nodeIds.Contains(node.Id))
             {
                 nodeWriter.Write7BitEncodedInt64(node.Id);
