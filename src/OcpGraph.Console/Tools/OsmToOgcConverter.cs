@@ -45,6 +45,11 @@ public static class OsmToOgcConverter
 
             if (mapObject is MapWay way)
             {
+                if (way.Type == WayType.NoVehicles)
+                {
+                    continue;
+                }
+
                 wayWriter.Write7BitEncodedInt64(way.Id);
 
                 wayWriter.Write((byte) way.Type);
