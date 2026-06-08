@@ -9,6 +9,8 @@ namespace OcpGraph.Console.Tools;
 [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
 public static class OsmToOgcConverter
 {
+    private const int CoordinateScalingFactor = 10_000_000;
+    
     public static void ConvertData()
     {
         IMapDataProvider provider = new OsmMapDataProvider();
@@ -96,9 +98,9 @@ public static class OsmToOgcConverter
             {
                 nodeWriter.Write7BitEncodedInt64(node.Id);
                 
-                nodeWriter.Write(node.Latitude);
+                nodeWriter.Write7BitEncodedInt((int) (node.Latitude * CoordinateScalingFactor));
                 
-                nodeWriter.Write(node.Longitude);
+                nodeWriter.Write7BitEncodedInt((int) (node.Longitude * CoordinateScalingFactor));
             }
         }
 
