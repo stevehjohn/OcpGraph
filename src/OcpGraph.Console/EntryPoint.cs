@@ -54,6 +54,8 @@ public static class EntryPoint
         using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
 
         var id = 0;
+
+        names.Remove(null);
         
         foreach (var name in names)
         {
