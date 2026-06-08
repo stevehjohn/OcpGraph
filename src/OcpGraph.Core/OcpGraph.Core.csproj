@@ -10,4 +10,15 @@
         <PackageReference Include="OsmSharp" Version="6.2.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="../../data/great-britain.osm.pbf">
+            <Link>Data\ways.ogc</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="../../data/great-britain.osm.pbf">
+            <Link>Data\names.ogc</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>
