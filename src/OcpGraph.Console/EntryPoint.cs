@@ -20,6 +20,8 @@ public static class EntryPoint
         var lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
 
         using var wayWriter = new BinaryWriter(File.Create("./data/ways.ogc"));
+
+        var names = new HashSet<string>();
         
         foreach (var mapObject in provider.Read())
         {
@@ -43,10 +45,23 @@ public static class EntryPoint
                     wayWriter.Write7BitEncodedInt64(node);
                 }
 
-                wayWriter.Write7BitEncodedInt64(0);
+                names.Add(way.Name);
+
+                names.Add(way.Designation);
             }
         }
+
+        using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
+
+        var id = 0;
         
+        foreach (var name in names)
+        {
+            nameWriter.Write7BitEncodedInt(++id);
+            
+            nameWriter.Write(name);
+        }
+
         stopwatch.Stop();
         
         WriteLine($"{count:N0} map objects indexed in {stopwatch.Elapsed.TotalSeconds}s.");
