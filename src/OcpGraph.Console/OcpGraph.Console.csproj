@@ -9,6 +9,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OcpGraph.Core\OcpGraph.Core.csproj" />
+        <None Include="../../data/great-britain.osm.pbf">
+            <Link>Data\gb.osm.pbf</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
