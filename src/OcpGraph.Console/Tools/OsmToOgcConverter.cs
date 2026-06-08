@@ -23,6 +23,8 @@ public static class OsmToOgcConverter
 
         using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
 
+        using var nodeWriter = new BinaryWriter(File.Create("./data/names.ogc"));
+
         var names = new Dictionary<string, int>();
 
         var id = 1;
@@ -82,10 +84,21 @@ public static class OsmToOgcConverter
 
                 wayWriter.Write7BitEncodedInt(way.Nodes.Length);
 
-                foreach (var node in way.Nodes)
+                foreach (var item in way.Nodes)
                 {
-                    wayWriter.Write7BitEncodedInt64(node);
+                    wayWriter.Write7BitEncodedInt64(item);
                 }
+                
+                continue;
+            }
+            
+            if (mapObject is MapNode node)
+            {
+                nodeWriter.Write7BitEncodedInt64(node.Id);
+                
+                nodeWriter.Write(node.Latitude);
+                
+                nodeWriter.Write(node.Longitude);
             }
         }
 
