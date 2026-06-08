@@ -16,6 +16,8 @@ public static class EntryPoint
         var stopwatch = Stopwatch.StartNew();
         
         var lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
+
+        using var wayWriter = new BinaryWriter(File.Create("./data/ways.ogc"));
         
         foreach (var mapObject in provider.Read())
         {
@@ -28,30 +30,15 @@ public static class EntryPoint
                 WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds:N2}s, ({provider.Progress:N2}%).");
             }
 
-            if (mapObject is MapWay)
+            if (mapObject is MapWay way)
             {
-                var way = mapObject as MapWay;
-                
-                WriteLine(string.Join(',', way.Nodes));
-            }
+                wayWriter.Write(way.Id.Value);
 
-            if (mapObject.Id == null || mapObject.Id == 0)
-            {
-                WriteLine("!");
+                foreach (var node in way.Nodes)
+                {
+                    wayWriter.Write(node);
+                }
             }
-
-            //
-            // var way = mapObject as MapWay;
-            //
-            // if (way == null)
-            // {
-            //     continue;
-            // }
-            //
-            // if (way.Nodes.Contains(0))
-            // {
-            //     WriteLine("!");
-            // }
         }
         
         stopwatch.Stop();
