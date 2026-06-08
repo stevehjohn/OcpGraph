@@ -10,7 +10,7 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
     
     public string Type { get; }
     
-    public int? MaxSpeed { get; }
+    public byte? MaxSpeed { get; }
     
     public MapWay(Way way) : this(GetId(way.Id), way.Nodes)
     {
@@ -35,7 +35,7 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 
             if (parts.Length > 0)
             {
-                if (int.TryParse(parts[0], out var speed))
+                if (byte.TryParse(parts[0], out var speed))
                 {
                     MaxSpeed = speed;
                 }
