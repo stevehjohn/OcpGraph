@@ -6,8 +6,11 @@ namespace OcpGraph.Console;
 [SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
 public static class EntryPoint
 {
-    public static void Main()
+    public static void Main(string[] arguments)
     {
-        OsmToOgcConverter.ConvertData();
+        if (arguments.Length > 0 && arguments[0] == "convert")
+        {
+            OsmToOgcConverter.ConvertData();
+        }
     }
 }
