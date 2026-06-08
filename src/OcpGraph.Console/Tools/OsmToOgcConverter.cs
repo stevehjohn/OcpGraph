@@ -23,7 +23,7 @@ public static class OsmToOgcConverter
 
         using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
 
-        using var nodeWriter = new BinaryWriter(File.Create("./data/names.ogc"));
+        using var nodeWriter = new BinaryWriter(File.Create("./data/nodes.ogc"));
 
         var names = new Dictionary<string, int>();
 
