@@ -37,6 +37,6 @@ public static class EntryPoint
         
         stopwatch.Stop();
         
-        Write($"\n\nGraph loaded in {stopwatch.Elapsed.Seconds}s\n");
+        Write($"\n\nGraph loaded in {stopwatch.Elapsed.Seconds}s\n\n");
     }
 }
