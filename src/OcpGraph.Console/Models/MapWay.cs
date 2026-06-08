@@ -8,7 +8,7 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 
     public string Designation { get; }
 
-    public WayType Type { get; private init; }
+    public WayType Type { get; private init; } = WayType.NoVehicles;
 
     public Direction Direction { get; } = Direction.Bidirectional;
 
