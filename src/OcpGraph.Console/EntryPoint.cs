@@ -35,10 +35,8 @@ public static class EntryPoint
             CursorLeft = 0;
         }
         
-        WriteLine();
-
         stopwatch.Stop();
         
-        Write($"Graph loaded in {stopwatch.Elapsed.TotalMilliseconds}ms");
+        Write($"\n\nGraph loaded in {stopwatch.Elapsed.Seconds}s\n");
     }
 }
