@@ -1,0 +1,99 @@
+using System.Diagnostics;
+using OcpGraph.Core.DataProviders;
+using OcpGraph.Core.Models;
+using static System.Console;
+
+namespace OcpGraph.Console.Tools;
+
+public static class OsmToOgcConverter
+{
+    public static void ConvertData()
+    {
+        IMapDataProvider provider = new OsmMapDataProvider();
+        
+        var count = 0;
+        
+        var stopwatch = Stopwatch.StartNew();
+        
+        var lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
+
+        using var wayWriter = new BinaryWriter(File.Create("./data/ways.ogc"));
+
+        using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
+
+        var names = new Dictionary<string, int>();
+
+        var id = 1;
+
+        var types = new HashSet<string>();
+        
+        foreach (var mapObject in provider.Read())
+        {
+            count++;
+
+            if (stopwatch.ElapsedMilliseconds - lastUpdateMilliseconds > 500)
+            {
+                lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
+                
+                WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds:N2}s, ({provider.Progress:N2}%).");
+            }
+
+            if (mapObject is MapWay way)
+            {
+                types.Add(way.Type);
+                
+                wayWriter.Write7BitEncodedInt64(way.Id);
+
+                if (! string.IsNullOrEmpty(way.Name))
+                {
+                    if (names.TryAdd(way.Name, id))
+                    {
+                        nameWriter.Write7BitEncodedInt(id++);
+            
+                        nameWriter.Write(way.Name);
+                    }
+
+                    wayWriter.Write7BitEncodedInt(names[way.Name]);
+                }
+                else
+                {
+                    wayWriter.Write7BitEncodedInt(0);
+                }
+
+                if (! string.IsNullOrEmpty(way.Designation))
+                {
+                    if (names.TryAdd(way.Designation, id))
+                    {
+                        nameWriter.Write7BitEncodedInt(id++);
+            
+                        nameWriter.Write(way.Designation);
+                    }
+                
+                    wayWriter.Write7BitEncodedInt(names[way.Designation]);
+                }
+                else
+                {
+                    wayWriter.Write7BitEncodedInt(0);
+                }
+                
+                wayWriter.Write(way.MaxSpeed ?? 0);
+
+                wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
+
+                foreach (var node in way.Nodes)
+                {
+                    wayWriter.Write7BitEncodedInt64(node);
+                }
+            }
+        }
+
+        foreach (var type in types)
+        {
+            WriteLine(type);
+        }
+
+        stopwatch.Stop();
+        
+        WriteLine($"{count:N0} map objects indexed in {stopwatch.Elapsed.TotalSeconds}s.");
+    }
+}
