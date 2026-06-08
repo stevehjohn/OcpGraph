@@ -20,12 +20,9 @@ public static class EntryPoint
 
         var stopwatch = Stopwatch.StartNew();
 
-        Graph graph = null;
+        var graph = new Graph();
         
-        var loadTask = Task.Run(() =>
-        {
-            graph = new Graph();
-        });
+        var loadTask = Task.Run(graph.LoadData);
 
         while (! loadTask.IsCompleted)
         {
