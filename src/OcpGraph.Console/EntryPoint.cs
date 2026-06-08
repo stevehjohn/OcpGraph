@@ -21,7 +21,11 @@ public static class EntryPoint
 
         using var wayWriter = new BinaryWriter(File.Create("./data/ways.ogc"));
 
-        var names = new HashSet<string>();
+        using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
+
+        var names = new Dictionary<int, string>();
+
+        var id = 0;
         
         foreach (var mapObject in provider.Read())
         {
@@ -45,23 +49,24 @@ public static class EntryPoint
                     wayWriter.Write7BitEncodedInt64(node);
                 }
 
-                names.Add(way.Name);
-
-                names.Add(way.Designation);
-            }
-        }
-
-        using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
-
-        var id = 0;
-
-        names.Remove(null);
-        
-        foreach (var name in names)
-        {
-            nameWriter.Write7BitEncodedInt(++id);
+                if (! string.IsNullOrEmpty(way.Name) && names.TryAdd(id, way.Name))
+                {
+                    id++;
+                    
+                    nameWriter.Write7BitEncodedInt(++id);
             
-            nameWriter.Write(name);
+                    nameWriter.Write(way.Name);
+                }
+
+                if (! string.IsNullOrEmpty(way.Designation) && names.TryAdd(id, way.Designation))
+                {
+                    id++;
+
+                    nameWriter.Write7BitEncodedInt(++id);
+            
+                    nameWriter.Write(way.Designation);
+                }
+            }
         }
 
         stopwatch.Stop();
