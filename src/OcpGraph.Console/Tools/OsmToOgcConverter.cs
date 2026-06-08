@@ -1,10 +1,12 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using OcpGraph.Core.DataProviders;
 using OcpGraph.Core.Models;
 using static System.Console;
 
 namespace OcpGraph.Console.Tools;
 
+[SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
 public static class OsmToOgcConverter
 {
     public static void ConvertData()
