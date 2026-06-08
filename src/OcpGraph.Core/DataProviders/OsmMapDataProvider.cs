@@ -36,6 +36,9 @@ public class OsmMapDataProvider : IMapDataProvider
     {
         switch (item.Type)
         {
+            case OsmGeoType.Node:
+                return new MapNode(item as Node);
+
             case OsmGeoType.Way:
                 return new MapWay(item as Way);
         }
