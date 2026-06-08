@@ -29,17 +29,23 @@ public static class EntryPoint
                 WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds:N2}s, ({provider.Progress:N2}%).");
             }
 
-            var way = mapObject as MapWay;
-
-            if (way == null)
-            {
-                continue;
-            }
-
-            if (way.Nodes.Contains(0))
+            if (mapObject.Id == null || mapObject.Id == 0)
             {
                 WriteLine("!");
             }
+
+            //
+            // var way = mapObject as MapWay;
+            //
+            // if (way == null)
+            // {
+            //     continue;
+            // }
+            //
+            // if (way.Nodes.Contains(0))
+            // {
+            //     WriteLine("!");
+            // }
         }
         
         stopwatch.Stop();
