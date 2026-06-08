@@ -73,9 +73,19 @@ public class Graph
         return nearestWay ?? throw new InvalidOperationException($"No way references node {nearestNode.Id}.");
     }
 
-    public string GetName(int nameId)
+    public string GetName(Way way)
     {
-        return _names[nameId];
+        if (way.NameId > 0)
+        {
+            return _names[way.NameId];
+        }
+
+        if (way.DesignationId > 0)
+        {
+            return _names[way.DesignationId];
+        }
+        
+        return "Unknown";
     }
 
     private static bool ContainsNode(Way way, long nodeId)
