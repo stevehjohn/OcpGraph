@@ -9,6 +9,8 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
     public string Designation { get; }
 
     public WayType Type { get; }
+    
+    private Direction Direction { get; } =  Direction.Bidirectional;
 
     public byte? MaxSpeed { get; }
 
@@ -35,7 +37,8 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
                 "secondary" => WayType.Secondary,
                 "tertiary" => WayType.Tertiary,
                 "trunk" => WayType.Trunk,
-                _ => WayType.Other
+                "byway" or "road" => WayType.Other,
+                _ => WayType.NoVehicles
             };
         }
 
@@ -50,6 +53,18 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
                     MaxSpeed = speed;
                 }
             }
+        }
+
+        if (way.Tags.TryGetValue("oneway", out var oneway))
+        {
+            var lower = oneway.ToLower();
+
+            Direction = lower switch
+            {
+                "true" or "yes" or "1" => Direction.OneWay,
+                "-1" => Direction.OmwWayReverse,
+                _ => Direction
+            };
         }
     }
 }

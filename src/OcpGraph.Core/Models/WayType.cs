@@ -7,5 +7,6 @@ public enum WayType : byte
     Secondary,
     Tertiary,
     Trunk,
-    Other
+    Other,
+    NoVehicles
 }
