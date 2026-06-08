@@ -1,8 +1,8 @@
-using OcpGraph.Core.Models.Osm;
+using OcpGraph.Console.Models;
 using OsmSharp;
 using OsmSharp.Streams;
 
-namespace OcpGraph.Core.DataProviders;
+namespace OcpGraph.Console.DataProviders;
 
 public class OsmMapDataProvider : IMapDataProvider
 {

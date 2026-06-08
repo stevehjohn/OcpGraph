@@ -1,4 +1,4 @@
-namespace OcpGraph.Core.Models.Osm;
+namespace OcpGraph.Console.Models;
 
 public abstract record MapObject(long Id)
 {

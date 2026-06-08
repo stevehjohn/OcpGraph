@@ -1,4 +1,6 @@
-namespace OcpGraph.Core.Models.Osm;
+using OcpGraph.Core.Models;
+
+namespace OcpGraph.Console.Models;
 
 public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 {

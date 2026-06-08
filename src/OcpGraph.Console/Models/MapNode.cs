@@ -1,4 +1,4 @@
-namespace OcpGraph.Core.Models.Osm;
+namespace OcpGraph.Console.Models;
 
 public sealed record MapNode(long Id) : MapObject(Id)
 {

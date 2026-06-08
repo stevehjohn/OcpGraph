@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using OcpGraph.Core.DataProviders;
-using OcpGraph.Core.Models.Osm;
+using OcpGraph.Console.DataProviders;
+using OcpGraph.Console.Models;
 using static System.Console;
 
 namespace OcpGraph.Console.Tools;
