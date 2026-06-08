@@ -34,18 +34,12 @@ public class OsmMapDataProvider : IMapDataProvider
 
     private static MapObject Translate(OsmGeo item)
     {
-        switch (item.Type)
+        return item.Type switch
         {
-            case OsmGeoType.Node:
-                return new MapNode(item as Node);
-
-            case OsmGeoType.Way:
-                return new MapWay(item as Way);
-
-            case OsmGeoType.Relation:
-                return new MapRelation(item as Relation);
-        }
-        
-        return null;
+            OsmGeoType.Node => new MapNode(item as Node),
+            OsmGeoType.Way => new MapWay(item as Way),
+            OsmGeoType.Relation => new MapRelation(item as Relation),
+            _ => null
+        };
     }
 }

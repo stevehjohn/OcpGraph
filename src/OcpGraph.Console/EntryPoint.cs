@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using OcpGraph.Core.DataProviders;
 using OcpGraph.Core.Models;
 using static System.Console;
 
 namespace OcpGraph.Console;
 
+[SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance")]
 public static class EntryPoint
 {
     public static void Main()
@@ -32,7 +34,7 @@ public static class EntryPoint
 
             if (mapObject is MapWay way)
             {
-                wayWriter.Write7BitEncodedInt64(way.Id.Value);
+                wayWriter.Write7BitEncodedInt64(way.Id);
 
                 wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
 

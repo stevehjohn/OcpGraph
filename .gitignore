@@ -302,3 +302,4 @@ lambdas/.serverless/
 *.orig
 cookies.txt
 *.pbf
+*.ogc
