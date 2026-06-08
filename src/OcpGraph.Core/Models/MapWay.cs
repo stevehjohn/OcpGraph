@@ -4,11 +4,11 @@ namespace OcpGraph.Core.Models;
 
 public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 {
-    public string Name { get; init; }
+    public string Name { get; }
     
-    public string Designation { get; init; }
+    public string Designation { get; }
     
-    public string Type { get; init; }
+    public string Type { get; }
     
     public MapWay(Way way) : this(GetId(way.Id), way.Nodes)
     {
