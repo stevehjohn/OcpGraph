@@ -24,6 +24,8 @@ public static class EntryPoint
         
         var loadTask = Task.Run(graph.LoadData);
 
+        WriteLine();
+        
         while (! loadTask.IsCompleted)
         {
             Thread.Sleep(100);
