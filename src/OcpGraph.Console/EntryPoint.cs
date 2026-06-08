@@ -29,7 +29,11 @@ public static class EntryPoint
             Thread.Sleep(100);
             
             Write($"{graph.Progress}% loaded.");
+
+            CursorLeft = 0;
         }
+        
+        WriteLine();
 
         stopwatch.Stop();
         
