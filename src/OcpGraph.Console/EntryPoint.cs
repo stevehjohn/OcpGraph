@@ -23,9 +23,9 @@ public static class EntryPoint
 
         using var nameWriter = new BinaryWriter(File.Create("./data/names.ogc"));
 
-        var names = new Dictionary<int, string>();
+        var names = new Dictionary<string, int>();
 
-        var id = 0;
+        var id = 1;
         
         foreach (var mapObject in provider.Read())
         {
@@ -42,29 +42,35 @@ public static class EntryPoint
             {
                 wayWriter.Write7BitEncodedInt64(way.Id);
 
+                if (! string.IsNullOrEmpty(way.Name))
+                {
+                    if (names.TryAdd(way.Name, id))
+                    {
+                        nameWriter.Write7BitEncodedInt(id++);
+            
+                        nameWriter.Write(way.Name);
+                    }
+
+                    wayWriter.Write(names[way.Name]);
+                }
+
+                if (! string.IsNullOrEmpty(way.Designation))
+                {
+                    if (names.TryAdd(way.Designation, id))
+                    {
+                        nameWriter.Write7BitEncodedInt(id++);
+            
+                        nameWriter.Write(way.Designation);
+                    }
+                
+                    wayWriter.Write(names[way.Designation]);
+                }
+
                 wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
 
                 foreach (var node in way.Nodes)
                 {
                     wayWriter.Write7BitEncodedInt64(node);
-                }
-
-                if (! string.IsNullOrEmpty(way.Name) && names.TryAdd(id, way.Name))
-                {
-                    id++;
-                    
-                    nameWriter.Write7BitEncodedInt(++id);
-            
-                    nameWriter.Write(way.Name);
-                }
-
-                if (! string.IsNullOrEmpty(way.Designation) && names.TryAdd(id, way.Designation))
-                {
-                    id++;
-
-                    nameWriter.Write7BitEncodedInt(++id);
-            
-                    nameWriter.Write(way.Designation);
                 }
             }
         }
