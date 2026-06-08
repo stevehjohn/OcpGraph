@@ -1,6 +1,6 @@
 namespace OcpGraph.Core.Models;
 
-public enum Direction
+public enum Direction : byte
 {
     Bidirectional,
     OneWay,

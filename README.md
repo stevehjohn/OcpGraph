@@ -16,7 +16,7 @@ Obtain the `.osm.pbf` file from [here](https://download.geofabrik.de/europe/grea
 
 ### ways.ogc
 
-WayId,Type,NameId,DesignationId,SpeedLimit,NodeCount,Nodes[]
+WayId,Type,NameId,DesignationId,SpeedLimit,Direction,NodeCount,Nodes[]
 
 ### names.ogc
 

@@ -10,7 +10,7 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 
     public WayType Type { get; }
     
-    private Direction Direction { get; } =  Direction.Bidirectional;
+    public Direction Direction { get; } =  Direction.Bidirectional;
 
     public byte? MaxSpeed { get; }
 
