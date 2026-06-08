@@ -39,7 +39,7 @@ public static class EntryPoint
 
         Write($"\n\nGraph loaded in {stopwatch.Elapsed.Seconds}s\n\n");
 
-        var way = graph.FindNearestWay(51.5038653, -3.562097);
+        var way = graph.FindNearestWay(51.5034261, -3.5597743);
 
         WriteLine($"Nearest way: {graph.GetName(way)}\n");
     }
