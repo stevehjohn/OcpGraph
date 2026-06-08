@@ -14,33 +14,33 @@ public static class EntryPoint
         if (arguments.Length > 0 && arguments[0] == "convert")
         {
             OsmToOgcConverter.ConvertData();
-            
+
             return;
         }
 
         var stopwatch = Stopwatch.StartNew();
 
         var graph = new Graph();
-        
+
         var loadTask = Task.Run(graph.LoadData);
 
         WriteLine();
-        
+
         while (! loadTask.IsCompleted)
         {
             Thread.Sleep(100);
-            
+
             Write($"{graph.Progress:N2}% loaded.");
 
             CursorLeft = 0;
         }
-        
+
         stopwatch.Stop();
-        
+
         Write($"\n\nGraph loaded in {stopwatch.Elapsed.Seconds}s\n\n");
 
-        var way = graph.FindNearestWay(51.5033761, -3.5643529);
-        
+        var way = graph.FindNearestWay(51.5037748, -3.5642803);
+
         WriteLine($"Nearest way: {graph.GetName(way)}");
     }
 }
