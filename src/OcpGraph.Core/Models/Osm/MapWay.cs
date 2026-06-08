@@ -1,5 +1,3 @@
-using OsmSharp;
-
 namespace OcpGraph.Core.Models.Osm;
 
 public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
@@ -14,7 +12,7 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
 
     public byte? MaxSpeed { get; private init; }
 
-    public MapWay(Way way) : this(GetId(way.Id), way.Nodes)
+    public MapWay(OsmSharp.Way way) : this(GetId(way.Id), way.Nodes)
     {
         if (way.Tags.TryGetValue("name", out var name))
         {
