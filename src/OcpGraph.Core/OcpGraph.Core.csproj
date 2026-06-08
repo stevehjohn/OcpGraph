@@ -11,11 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="../../data/great-britain.osm.pbf">
+        <None Include="../../data/ways.ogc">
             <Link>Data\ways.ogc</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Include="../../data/great-britain.osm.pbf">
+        <None Include="../../data/names.ogc">
             <Link>Data\names.ogc</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
