@@ -51,7 +51,11 @@ public static class EntryPoint
                         nameWriter.Write(way.Name);
                     }
 
-                    wayWriter.Write(names[way.Name]);
+                    wayWriter.Write7BitEncodedInt(names[way.Name]);
+                }
+                else
+                {
+                    wayWriter.Write7BitEncodedInt(0);
                 }
 
                 if (! string.IsNullOrEmpty(way.Designation))
@@ -63,7 +67,11 @@ public static class EntryPoint
                         nameWriter.Write(way.Designation);
                     }
                 
-                    wayWriter.Write(names[way.Designation]);
+                    wayWriter.Write7BitEncodedInt(names[way.Designation]);
+                }
+                else
+                {
+                    wayWriter.Write7BitEncodedInt(0);
                 }
 
                 wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
