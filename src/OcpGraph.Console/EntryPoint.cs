@@ -20,8 +20,20 @@ public static class EntryPoint
 
         var stopwatch = Stopwatch.StartNew();
 
-        var graph = new Graph();
+        Graph graph = null;
         
+        var loadTask = Task.Run(() =>
+        {
+            graph = new Graph();
+        });
+
+        while (! loadTask.IsCompleted)
+        {
+            Thread.Sleep(100);
+            
+            Write($"{graph.Progress}% loaded.");
+        }
+
         stopwatch.Stop();
         
         Write($"Graph loaded in {stopwatch.Elapsed.TotalMilliseconds}ms");
