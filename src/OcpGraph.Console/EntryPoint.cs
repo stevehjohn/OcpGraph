@@ -32,12 +32,16 @@ public static class EntryPoint
 
             if (mapObject is MapWay way)
             {
-                wayWriter.Write(way.Id.Value);
+                wayWriter.Write7BitEncodedInt64(way.Id.Value);
+
+                wayWriter.Write7BitEncodedInt64(way.Nodes.Length);
 
                 foreach (var node in way.Nodes)
                 {
-                    wayWriter.Write(node);
+                    wayWriter.Write7BitEncodedInt64(node);
                 }
+
+                wayWriter.Write7BitEncodedInt64(0);
             }
         }
         
