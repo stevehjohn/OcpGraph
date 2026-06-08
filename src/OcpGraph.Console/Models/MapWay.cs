@@ -37,7 +37,7 @@ public sealed record MapWay(long Id, long[] Nodes) : MapObject(Id)
                 "secondary" => WayType.Secondary,
                 "tertiary" => WayType.Tertiary,
                 "trunk" => WayType.Trunk,
-                "byway" or "road" => WayType.Other,
+                "residential" or "service" or "unclassified" or "living_street" or "road" or "byway" => WayType.Other,
                 _ => WayType.NoVehicles
             };
         }
