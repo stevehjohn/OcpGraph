@@ -27,8 +27,6 @@ public static class OsmToOgcConverter
 
         var id = 1;
 
-        var types = new HashSet<string>();
-        
         foreach (var mapObject in provider.Read())
         {
             count++;
@@ -42,9 +40,9 @@ public static class OsmToOgcConverter
 
             if (mapObject is MapWay way)
             {
-                types.Add(way.Type);
-                
                 wayWriter.Write7BitEncodedInt64(way.Id);
+                
+                wayWriter.Write((byte) way.Type);
 
                 if (! string.IsNullOrEmpty(way.Name))
                 {
@@ -87,11 +85,6 @@ public static class OsmToOgcConverter
                     wayWriter.Write7BitEncodedInt64(node);
                 }
             }
-        }
-
-        foreach (var type in types)
-        {
-            WriteLine(type);
         }
 
         stopwatch.Stop();
