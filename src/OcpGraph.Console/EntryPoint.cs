@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using OcpGraph.Core.DataProviders;
 using OcpGraph.Core.Models;
-using OsmSharp;
 using static System.Console;
 
 namespace OcpGraph.Console;
@@ -27,6 +26,13 @@ public static class EntryPoint
                 lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
                 
                 WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds:N2}s, ({provider.Progress:N2}%).");
+            }
+
+            if (mapObject is MapWay)
+            {
+                var way = mapObject as MapWay;
+                
+                WriteLine(string.Join(',', way.Nodes));
             }
 
             if (mapObject.Id == null || mapObject.Id == 0)
