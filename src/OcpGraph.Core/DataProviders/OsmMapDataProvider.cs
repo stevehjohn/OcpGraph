@@ -41,6 +41,9 @@ public class OsmMapDataProvider : IMapDataProvider
 
             case OsmGeoType.Way:
                 return new MapWay(item as Way);
+
+            case OsmGeoType.Relation:
+                return new MapRelation(item as Relation);
         }
         
         return null;
