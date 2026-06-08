@@ -1,6 +1,6 @@
 using OsmSharp;
 
-namespace OcpGraph.Core.Models;
+namespace OcpGraph.Core.Models.Osm;
 
 public sealed record MapNode(long Id) : MapObject(Id)
 {

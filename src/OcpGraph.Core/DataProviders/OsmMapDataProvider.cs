@@ -1,4 +1,5 @@
 using OcpGraph.Core.Models;
+using OcpGraph.Core.Models.Osm;
 using OsmSharp;
 using OsmSharp.Streams;
 
