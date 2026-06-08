@@ -41,6 +41,6 @@ public static class EntryPoint
 
         var way = graph.FindNearestWay(51.5036356, -3.5646179);
 
-        WriteLine($"Nearest way: {graph.GetName(way)}");
+        WriteLine($"Nearest way: {graph.GetName(way)}\n");
     }
 }
