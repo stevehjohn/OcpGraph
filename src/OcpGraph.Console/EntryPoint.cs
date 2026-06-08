@@ -18,7 +18,7 @@ public static class EntryPoint
         
         var lastUpdateMilliseconds = stopwatch.ElapsedMilliseconds;
         
-        foreach (var mapObject in provider.Read(OsmGeoType.Way))
+        foreach (var mapObject in provider.Read())
         {
             count++;
 
