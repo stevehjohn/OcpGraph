@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using OcpGraph.Core.Models;
 using OcpGraph.Viewer.Infrastructure;
 
 namespace OcpGraph.Viewer.Display;
@@ -12,10 +14,14 @@ public sealed class Renderer : Game
 
     // ReSharper disable once NotAccessedField.Local
     private readonly GraphicsDeviceManager _graphics;
+    
+    private readonly Graph _graph = new();
 
     private TextManager _textManager;
     
     private SpriteBatch _spriteBatch;
+
+    private bool _loading;
     
     public Renderer()
     {
@@ -31,6 +37,21 @@ public sealed class Renderer : Game
     protected override void Initialize()
     {
         Window.Title = "OcpGraph Viewer";
+
+        Task.Run(() =>
+        {
+            _loading = true;
+
+            _graph.LoadData();
+        }).ContinueWith(task =>
+        {
+            _loading = false;
+
+            if (task.IsFaulted)
+            {
+                throw task.Exception;
+            }
+        });
         
         base.Initialize();
     }
