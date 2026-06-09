@@ -148,9 +148,9 @@ public sealed class Renderer : Game
 
                 var b = Project(second.Latitude, second.Longitude, bounds.MinLatitude, bounds.MaxLatitude, bounds.MinLongitude, bounds.MaxLongitude, width, height);
 
-                _vertices.Add(new VertexPositionColor(new Vector3(a, 0), colour));
+                vertices.Add(new VertexPositionColor(new Vector3(a, 0), colour));
 
-                _vertices.Add(new VertexPositionColor(new Vector3(b, 0), colour));
+                vertices.Add(new VertexPositionColor(new Vector3(b, 0), colour));
             }
         }
         
