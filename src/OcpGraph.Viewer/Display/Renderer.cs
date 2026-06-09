@@ -27,7 +27,7 @@ public sealed class Renderer : Game
 
     private readonly Graph _graph = new();
 
-    private readonly List<VertexPositionColor> _vertices = [];
+    private List<VertexPositionColor> _vertices = [];
 
     private TextManager _textManager;
 
@@ -52,19 +52,19 @@ public sealed class Renderer : Game
     {
         Window.Title = "OcpGraph Viewer";
 
+        _isLoading = true;
+
         Task.Run(() =>
         {
-            _isLoading = true;
-
             _graph.LoadData();
         }).ContinueWith(task =>
         {
-            _isLoading = false;
-
             if (task.IsFaulted)
             {
                 throw task.Exception;
             }
+
+            LoadComplete();
         });
 
         base.Initialize();
@@ -91,15 +91,29 @@ public sealed class Renderer : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        _spriteBatch.Begin();
-
         DrawRoads(GraphicsDevice);
 
+        _spriteBatch.Begin();
+
         DrawText();
-        
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private void LoadComplete()
+    {
+        _isLoading = false;
+
+        Task.Run(() =>
+        {
+            var ways = _graph.FindWaysInWindow(51.5037567, -3.5642593, 1_000, 1_000);
+
+            var vertices = BuildRoadVertices(ways, _graph, _graph.Bounds, WindowWidth, WindowHeight);
+
+            _vertices = vertices;
+        });
     }
 
     private void DrawText()
@@ -110,9 +124,9 @@ public sealed class Renderer : Game
         }
     }
 
-    private void BuildRoadVertices(IEnumerable<Way> ways, Graph graph, MapBounds bounds, int width, int height)
+    private List<VertexPositionColor> BuildRoadVertices(IEnumerable<Way> ways, Graph graph, MapBounds bounds, int width, int height)
     {
-        _vertices.Clear();
+        var vertices = new List<VertexPositionColor>();
 
         foreach (var way in ways)
         {
@@ -134,6 +148,8 @@ public sealed class Renderer : Game
                 _vertices.Add(new VertexPositionColor(new Vector3(b, 0), colour));
             }
         }
+        
+        return vertices;
     }
 
     private void DrawRoads(GraphicsDevice graphicsDevice)
@@ -144,9 +160,9 @@ public sealed class Renderer : Game
         }
 
         _effect.World = Matrix.Identity;
-        
+
         _effect.View = Matrix.Identity;
-        
+
         _effect.Projection = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1);
 
         _effect.VertexColorEnabled = true;
