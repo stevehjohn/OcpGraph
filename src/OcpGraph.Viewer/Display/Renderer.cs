@@ -129,7 +129,7 @@ public sealed class Renderer : Game
         }
     }
 
-    private List<VertexPositionColor> BuildRoadVertices(IEnumerable<Way> ways, Graph graph, MapBounds bounds, int width, int height)
+    private static List<VertexPositionColor> BuildRoadVertices(IEnumerable<Way> ways, Graph graph, MapBounds bounds, int width, int height)
     {
         var vertices = new List<VertexPositionColor>();
 
