@@ -14,7 +14,7 @@ public sealed class Renderer : Game
     private const int WindowWidth = 800;
 
     private const int WindowHeight = 600;
-    
+
     private const double RebuildDelayMilliseconds = 75;
 
     private static readonly RasterizerState AntiAliasedRasterizerState = new()
@@ -111,12 +111,12 @@ public sealed class Renderer : Game
         if (! _isLoading && mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
         {
             var deltaX = mouseState.X - _previousMouseState.X;
-            
+
             var deltaY = mouseState.Y - _previousMouseState.Y;
 
             Pan(deltaX, deltaY);
         }
-        
+
         if (_mapDirty)
         {
             _millisecondsSinceMapChanged += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -125,6 +125,8 @@ public sealed class Renderer : Game
             {
                 _mapDirty = false;
                 
+                _millisecondsSinceMapChanged = 0;
+
                 RebuildMap();
             }
         }
@@ -148,12 +150,10 @@ public sealed class Renderer : Game
 
         base.Draw(gameTime);
     }
-    
+
     private void RequestMapRebuild()
     {
         _mapDirty = true;
-        
-        _millisecondsSinceMapChanged = 0;
     }
 
     private void Pan(int deltaX, int deltaY)
@@ -179,20 +179,23 @@ public sealed class Renderer : Game
     private void LoadComplete()
     {
         _isLoading = false;
-        
+
         RebuildMap();
     }
+
     private void RebuildMap()
     {
         if (_isBuildingVertices)
         {
+            _mapDirty =  true;
+            
             return;
         }
 
         _isBuildingVertices = true;
 
         var latitude = _centreLatitude;
-        
+
         var longitude = _centreLongitude;
 
         Task.Run(() =>
@@ -209,7 +212,7 @@ public sealed class Renderer : Game
             if (task.IsFaulted)
             {
                 Console.WriteLine(task.Exception);
-                
+
                 return;
             }
 
