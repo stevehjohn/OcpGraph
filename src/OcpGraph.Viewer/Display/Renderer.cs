@@ -109,8 +109,10 @@ public sealed class Renderer : Game
         Task.Run(() =>
         {
             var ways = _graph.FindWaysInWindow(51.5037567, -3.5642593, 1_000, 1_000);
-
-            var vertices = BuildRoadVertices(ways, _graph, _graph.Bounds, WindowWidth, WindowHeight);
+            
+            var bounds = MapBounds.FromCentre(51.5037567, -3.5642593, 1_000, 1_000);
+            
+            var vertices = BuildRoadVertices(ways, _graph, bounds, WindowWidth, WindowHeight);
 
             _vertices = vertices;
         });
