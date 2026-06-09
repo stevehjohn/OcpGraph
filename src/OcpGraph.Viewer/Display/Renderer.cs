@@ -144,10 +144,8 @@ public sealed class Renderer : Game
 
         var latitudePerPixel = (bounds.MaxLatitude - bounds.MinLatitude) / GraphicsDevice.Viewport.Height;
 
-        // Dragging the map right moves the viewed centre west.
         _centreLongitude -= deltaX * longitudePerPixel;
 
-        // Screen Y increases downward.
         _centreLatitude += deltaY * latitudePerPixel;
 
         RebuildMap();
