@@ -8,7 +8,7 @@ public class Graph
 
     private readonly Dictionary<long, Way> _ways = [];
 
-    public float Progress { get; private set; }
+    public float LoadProgress { get; private set; }
 
     public void LoadData()
     {
@@ -26,7 +26,7 @@ public class Graph
 
             _ways.Add(way.Id, way);
 
-            Progress = wayReader.BaseStream.Position * 100f / totalSize;
+            LoadProgress = wayReader.BaseStream.Position * 100f / totalSize;
         }
 
         var read = wayReader.BaseStream.Position;
@@ -37,7 +37,7 @@ public class Graph
 
             _nodes.Add(node.Id, node);
 
-            Progress = (read + nodeReader.BaseStream.Position) * 100f / totalSize;
+            LoadProgress = (read + nodeReader.BaseStream.Position) * 100f / totalSize;
         }
 
         read += nodeReader.BaseStream.Position;
@@ -50,7 +50,7 @@ public class Graph
 
             _names.Add(id, name);
 
-            Progress = (read + nameReader.BaseStream.Position) * 100f / totalSize;
+            LoadProgress = (read + nameReader.BaseStream.Position) * 100f / totalSize;
         }
     }
 
@@ -113,7 +113,7 @@ public class Graph
         return FindWaysInBounds(centreLatitude - halfLatitudeDelta, centreLongitude - halfLongitudeDelta, centreLatitude + halfLatitudeDelta, centreLongitude + halfLongitudeDelta);
     }
     
-    private IReadOnlyList<Way> FindWaysInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
+    private List<Way> FindWaysInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
     {
         var results = new List<Way>();
 

@@ -21,7 +21,7 @@ public sealed class Renderer : Game
     
     private SpriteBatch _spriteBatch;
 
-    private bool _loading;
+    private bool _isLoading;
     
     public Renderer()
     {
@@ -40,12 +40,12 @@ public sealed class Renderer : Game
 
         Task.Run(() =>
         {
-            _loading = true;
+            _isLoading = true;
 
             _graph.LoadData();
         }).ContinueWith(task =>
         {
-            _loading = false;
+            _isLoading = false;
 
             if (task.IsFaulted)
             {
@@ -69,6 +69,16 @@ public sealed class Renderer : Game
 
     protected override void Draw(GameTime gameTime)
     {
+        DrawText();
+        
         base.Draw(gameTime);
+    }
+
+    private void DrawText()
+    {
+        if (_isLoading)
+        {
+            _textManager.DrawMessage($"Loading ({_graph.LoadProgress})%...", WindowWidth / 2, WindowHeight / 2, Color.White, true);
+        }
     }
 }
