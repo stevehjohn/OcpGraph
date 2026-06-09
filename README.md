@@ -21,3 +21,7 @@ WayId,Type,NameId,DesignationId,SpeedLimit,Direction,NodeCount,Nodes[]
 ### names.ogc
 
 NameId,Name
+
+### nodes.ogc
+
+NodeId,Latitude,Longitude
