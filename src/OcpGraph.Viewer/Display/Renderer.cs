@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using OcpGraph.Viewer.Infrastructure;
 
 namespace OcpGraph.Viewer.Display;
 
@@ -10,6 +12,10 @@ public sealed class Renderer : Game
 
     // ReSharper disable once NotAccessedField.Local
     private readonly GraphicsDeviceManager _graphics;
+
+    private TextManager _textManager;
+    
+    private SpriteBatch _spriteBatch;
     
     public Renderer()
     {
@@ -32,6 +38,10 @@ public sealed class Renderer : Game
     protected override void LoadContent()
     {
         Content.RootDirectory = "_Content";
+        
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        _textManager = new TextManager(_spriteBatch, Content.Load<SpriteFont>("Font"));
 
         base.LoadContent();
     }
