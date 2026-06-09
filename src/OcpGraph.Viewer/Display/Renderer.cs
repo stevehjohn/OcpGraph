@@ -102,11 +102,10 @@ public sealed class Renderer : Game
     {
         var mouseState = Mouse.GetState();
 
-        if (! _isLoading &&
-            mouseState.LeftButton == ButtonState.Pressed &&
-            _previousMouseState.LeftButton == ButtonState.Pressed)
+        if (! _isLoading && mouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
         {
             var deltaX = mouseState.X - _previousMouseState.X;
+            
             var deltaY = mouseState.Y - _previousMouseState.Y;
 
             Pan(deltaX, deltaY);
