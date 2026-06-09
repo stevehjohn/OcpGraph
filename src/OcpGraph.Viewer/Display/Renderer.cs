@@ -8,6 +8,7 @@ public sealed class Renderer : Game
 
     private const int WindowHeight = 600;
 
+    // ReSharper disable once NotAccessedField.Local
     private readonly GraphicsDeviceManager _graphics;
     
     public Renderer()
@@ -26,5 +27,10 @@ public sealed class Renderer : Game
         Window.Title = "OcpGraph Viewer";
         
         base.Initialize();
+    }
+
+    protected override void Draw(GameTime gameTime)
+    {
+        base.Draw(gameTime);
     }
 }
