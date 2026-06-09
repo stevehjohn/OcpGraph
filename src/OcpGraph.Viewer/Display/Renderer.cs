@@ -13,21 +13,30 @@ public sealed class Renderer : Game
 
     private const int WindowHeight = 600;
 
+    private static Vector2 Project(double latitude, double longitude, double minLatitude, double maxLatitude, double minLongitude, double maxLongitude, int width, int height)
+    {
+        var x = (float) ((longitude - minLongitude) / (maxLongitude - minLongitude) * width);
+
+        var y = (float) ((maxLatitude - latitude) / (maxLatitude - minLatitude) * height);
+
+        return new Vector2(x, y);
+    }
+
     // ReSharper disable once NotAccessedField.Local
     private readonly GraphicsDeviceManager _graphics;
-    
+
     private readonly Graph _graph = new();
-    
+
     private readonly List<VertexPositionColor> _vertices = [];
-    
+
     private TextManager _textManager;
-    
+
     private SpriteBatch _spriteBatch;
 
     private BasicEffect _effect;
 
     private bool _isLoading;
-    
+
     public Renderer()
     {
         _graphics = new GraphicsDeviceManager(this)
@@ -38,7 +47,7 @@ public sealed class Renderer : Game
 
         IsMouseVisible = true;
     }
-    
+
     protected override void Initialize()
     {
         Window.Title = "OcpGraph Viewer";
@@ -57,14 +66,14 @@ public sealed class Renderer : Game
                 throw task.Exception;
             }
         });
-        
+
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
         Content.RootDirectory = "_Content";
-        
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         _textManager = new TextManager(_spriteBatch, Content.Load<SpriteFont>("Font"));
@@ -74,20 +83,22 @@ public sealed class Renderer : Game
             VertexColorEnabled = true,
             LightingEnabled = false
         };
-        
+
         base.LoadContent();
     }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
-        
+
         _spriteBatch.Begin();
-        
+
+        DrawRoads(GraphicsDevice);
+
         DrawText();
         
         _spriteBatch.End();
-        
+
         base.Draw(gameTime);
     }
 
@@ -96,6 +107,55 @@ public sealed class Renderer : Game
         if (_isLoading)
         {
             _textManager.DrawMessage($"Loading {_graph.LoadProgress:N0}%...", WindowWidth / 2, WindowHeight / 2, Color.White, true);
+        }
+    }
+
+    private void BuildRoadVertices(IEnumerable<Way> ways, Graph graph, MapBounds bounds, int width, int height)
+    {
+        _vertices.Clear();
+
+        foreach (var way in ways)
+        {
+            var colour = GetRoadColour(way.Type);
+
+            for (var i = 0; i < way.NodeCount - 1; i++)
+            {
+                if (! graph.TryGetNode(way[i], out var first) || ! graph.TryGetNode(way[i + 1], out var second))
+                {
+                    continue;
+                }
+
+                var a = Project(first.Latitude, first.Longitude, bounds.MinLatitude, bounds.MaxLatitude, bounds.MinLongitude, bounds.MaxLongitude, width, height);
+
+                var b = Project(second.Latitude, second.Longitude, bounds.MinLatitude, bounds.MaxLatitude, bounds.MinLongitude, bounds.MaxLongitude, width, height);
+
+                _vertices.Add(new VertexPositionColor(new Vector3(a, 0), colour));
+
+                _vertices.Add(new VertexPositionColor(new Vector3(b, 0), colour));
+            }
+        }
+    }
+
+    private void DrawRoads(GraphicsDevice graphicsDevice)
+    {
+        if (_vertices.Count == 0)
+        {
+            return;
+        }
+
+        _effect.World = Matrix.Identity;
+        
+        _effect.View = Matrix.Identity;
+        
+        _effect.Projection = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1);
+
+        _effect.VertexColorEnabled = true;
+
+        foreach (var pass in _effect.CurrentTechnique.Passes)
+        {
+            pass.Apply();
+
+            graphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _vertices.ToArray(), 0, _vertices.Count / 2);
         }
     }
 }
