@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{B65A
 		..\console.sh = ..\console.sh
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcpGraph.Viewer", "OcpGraph.Viewer\OcpGraph.Viewer.csproj", "{17E20931-B421-4C40-B9D5-720EA2027B9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +31,9 @@ Global
 		{EE900286-3A7F-4A82-BAD4-100893F6C55A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE900286-3A7F-4A82-BAD4-100893F6C55A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE900286-3A7F-4A82-BAD4-100893F6C55A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E20931-B421-4C40-B9D5-720EA2027B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E20931-B421-4C40-B9D5-720EA2027B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E20931-B421-4C40-B9D5-720EA2027B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E20931-B421-4C40-B9D5-720EA2027B9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
