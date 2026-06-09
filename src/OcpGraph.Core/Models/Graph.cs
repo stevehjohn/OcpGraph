@@ -2,6 +2,10 @@ namespace OcpGraph.Core.Models;
 
 public class Graph
 {
+    private const double CellSize = 0.01;
+
+    private readonly Dictionary<(int X, int Y), List<Way>> _waysByCell = [];
+
     private readonly Dictionary<int, string> _names = [];
 
     private readonly Dictionary<long, Node> _nodes = [];
@@ -52,6 +56,8 @@ public class Graph
 
             LoadProgress = (read + nameReader.BaseStream.Position) * 100f / totalSize;
         }
+        
+        BuildSpatialIndex();
     }
 
     public Way FindNearestWay(double latitude, double longitude)
@@ -118,32 +124,74 @@ public class Graph
         return _nodes.TryGetValue(id, out node);
     }
 
-    private List<Way> FindWaysInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
+    private void BuildSpatialIndex()
     {
-        var results = new List<Way>();
-
         foreach (var way in _ways.Values)
         {
+            var visitedCells = new HashSet<(int X, int Y)>();
+
             for (var i = 0; i < way.NodeCount; i++)
             {
-                if (!_nodes.TryGetValue(way[i], out var node))
+                if (! _nodes.TryGetValue(way[i], out var node))
                 {
                     continue;
                 }
 
-                if (node.Latitude < minLatitude || node.Latitude > maxLatitude || node.Longitude < minLongitude || node.Longitude > maxLongitude)
+                var cell = GetCell(node.Latitude, node.Longitude);
+
+                if (! visitedCells.Add(cell))
                 {
                     continue;
                 }
 
-                results.Add(way);
-                break;
+                if (! _waysByCell.TryGetValue(cell, out var ways))
+                {
+                    ways = [];
+                    _waysByCell.Add(cell, ways);
+                }
+
+                ways.Add(way);
+            }
+        }
+    }
+
+    private static (int X, int Y) GetCell(double latitude, double longitude)
+    {
+        return ((int) Math.Floor(longitude / CellSize), (int) Math.Floor(latitude / CellSize));
+    }
+
+    private List<Way> FindWaysInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
+    {
+        var minCell = GetCell(minLatitude, minLongitude);
+
+        var maxCell = GetCell(maxLatitude, maxLongitude);
+
+        var results = new List<Way>();
+
+        var seen = new HashSet<long>();
+
+        for (var y = minCell.Y; y <= maxCell.Y; y++)
+        {
+            for (var x = minCell.X; x <= maxCell.X; x++)
+            {
+                if (! _waysByCell.TryGetValue((x, y), out var ways))
+                {
+                    continue;
+                }
+
+                foreach (var way in ways)
+                {
+                    if (seen.Add(way.Id))
+                    {
+                        results.Add(way);
+                    }
+                }
             }
         }
 
         return results;
     }
-    
+
     private static double DistanceSquared(double latitude1, double longitude1, double latitude2, double longitude2)
     {
         var latitudeDifference = latitude1 - latitude2;
