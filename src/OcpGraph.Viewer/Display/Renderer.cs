@@ -14,6 +14,8 @@ public sealed class Renderer : Game
     private const int WindowWidth = 800;
 
     private const int WindowHeight = 600;
+    
+    private const double RebuildDelayMilliseconds = 75;
 
     private static readonly RasterizerState AntiAliasedRasterizerState = new()
     {
@@ -47,6 +49,10 @@ public sealed class Renderer : Game
     private MouseState _previousMouseState;
 
     private bool _isBuildingVertices;
+
+    private bool _mapDirty;
+
+    private double _millisecondsSinceMapChanged;
 
     public Renderer()
     {
@@ -110,6 +116,18 @@ public sealed class Renderer : Game
 
             Pan(deltaX, deltaY);
         }
+        
+        if (_mapDirty)
+        {
+            _millisecondsSinceMapChanged += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (_millisecondsSinceMapChanged >= RebuildDelayMilliseconds)
+            {
+                _mapDirty = false;
+                
+                RebuildMap();
+            }
+        }
 
         _previousMouseState = mouseState;
 
@@ -130,6 +148,13 @@ public sealed class Renderer : Game
 
         base.Draw(gameTime);
     }
+    
+    private void RequestMapRebuild()
+    {
+        _mapDirty = true;
+        
+        _millisecondsSinceMapChanged = 0;
+    }
 
     private void Pan(int deltaX, int deltaY)
     {
@@ -148,7 +173,7 @@ public sealed class Renderer : Game
 
         _centreLatitude += deltaY * latitudePerPixel;
 
-        RebuildMap();
+        RequestMapRebuild();
     }
 
     private void LoadComplete()
