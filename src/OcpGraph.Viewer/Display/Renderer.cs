@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -115,6 +116,8 @@ public sealed class Renderer : Game
             var vertices = BuildRoadVertices(ways, _graph, bounds, WindowWidth, WindowHeight);
 
             _vertices = vertices;
+            
+            Console.WriteLine("Done");
         });
     }
 
