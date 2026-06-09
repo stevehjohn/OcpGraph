@@ -15,7 +15,7 @@ public sealed class Renderer : Game
 
     private const int WindowHeight = 600;
 
-    private const double RebuildDelayMilliseconds = 75;
+    private const double RebuildDelayMilliseconds = 50;
 
     private static readonly RasterizerState AntiAliasedRasterizerState = new()
     {
