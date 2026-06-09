@@ -59,14 +59,14 @@ public class Graph
         var namedWays = _ways.Values.Where(way => way.NameId > 0 || way.DesignationId > 0);
 
         Way nearestWay = null;
-        
+
         var nearestDistance = double.MaxValue;
 
         foreach (var way in namedWays)
         {
             for (var i = 0; i < way.NodeCount; i++)
             {
-                if (!_nodes.TryGetValue(way[i], out var node))
+                if (! _nodes.TryGetValue(way[i], out var node))
                 {
                     continue;
                 }
@@ -76,7 +76,7 @@ public class Graph
                 if (distance < nearestDistance)
                 {
                     nearestDistance = distance;
-                    
+
                     nearestWay = way;
                 }
             }
@@ -96,10 +96,49 @@ public class Graph
         {
             return _names[way.DesignationId];
         }
-        
+
         return "Unknown";
     }
 
+    public IReadOnlyList<Way> FindWaysInWindow(double centreLatitude, double centreLongitude, double widthMetres, double heightMetres)
+    {
+        const double metresPerDegreeLatitude = 111_320d;
+
+        var halfLatitudeDelta = heightMetres / 2d / metresPerDegreeLatitude;
+
+        var metresPerDegreeLongitude = metresPerDegreeLatitude * Math.Cos(centreLatitude * Math.PI / 180d);
+
+        var halfLongitudeDelta = widthMetres / 2d / metresPerDegreeLongitude;
+
+        return FindWaysInBounds(centreLatitude - halfLatitudeDelta, centreLongitude - halfLongitudeDelta, centreLatitude + halfLatitudeDelta, centreLongitude + halfLongitudeDelta);
+    }
+    
+    private IReadOnlyList<Way> FindWaysInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
+    {
+        var results = new List<Way>();
+
+        foreach (var way in _ways.Values)
+        {
+            for (var i = 0; i < way.NodeCount; i++)
+            {
+                if (!_nodes.TryGetValue(way[i], out var node))
+                {
+                    continue;
+                }
+
+                if (node.Latitude < minLatitude || node.Latitude > maxLatitude || node.Longitude < minLongitude || node.Longitude > maxLongitude)
+                {
+                    continue;
+                }
+
+                results.Add(way);
+                break;
+            }
+        }
+
+        return results;
+    }
+    
     private static double DistanceSquared(double latitude1, double longitude1, double latitude2, double longitude2)
     {
         var latitudeDifference = latitude1 - latitude2;
