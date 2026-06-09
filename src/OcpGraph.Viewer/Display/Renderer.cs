@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using OcpGraph.Core.Models;
 using OcpGraph.Viewer.Infrastructure;
 
@@ -35,6 +36,18 @@ public sealed class Renderer : Game
 
     private bool _isLoading;
 
+    private double _viewWidthMetres = 1_000;
+
+    private double _viewHeightMetres = 1_000;
+
+    private double _centreLatitude = 51.5037567;
+
+    private double _centreLongitude = -3.5642593;
+
+    private MouseState _previousMouseState;
+
+    private bool _isBuildingVertices;
+
     public Renderer()
     {
         _graphics = new GraphicsDeviceManager(this)
@@ -52,6 +65,8 @@ public sealed class Renderer : Game
         Window.Title = "OcpGraph Viewer";
 
         _isLoading = true;
+
+        _previousMouseState = Mouse.GetState();
 
         Task.Run(() => { _graph.LoadData(); }).ContinueWith(task =>
         {
@@ -83,6 +98,25 @@ public sealed class Renderer : Game
         base.LoadContent();
     }
 
+    protected override void Update(GameTime gameTime)
+    {
+        var mouseState = Mouse.GetState();
+
+        if (! _isLoading &&
+            mouseState.LeftButton == ButtonState.Pressed &&
+            _previousMouseState.LeftButton == ButtonState.Pressed)
+        {
+            var deltaX = mouseState.X - _previousMouseState.X;
+            var deltaY = mouseState.Y - _previousMouseState.Y;
+
+            Pan(deltaX, deltaY);
+        }
+
+        _previousMouseState = mouseState;
+
+        base.Update(gameTime);
+    }
+
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
@@ -98,21 +132,66 @@ public sealed class Renderer : Game
         base.Draw(gameTime);
     }
 
+    private void Pan(int deltaX, int deltaY)
+    {
+        if (deltaX == 0 && deltaY == 0)
+        {
+            return;
+        }
+
+        var bounds = MapBounds.FromCentre(_centreLatitude, _centreLongitude, _viewWidthMetres, _viewHeightMetres);
+
+        var longitudePerPixel = (bounds.MaxLongitude - bounds.MinLongitude) / GraphicsDevice.Viewport.Width;
+
+        var latitudePerPixel = (bounds.MaxLatitude - bounds.MinLatitude) / GraphicsDevice.Viewport.Height;
+
+        // Dragging the map right moves the viewed centre west.
+        _centreLongitude -= deltaX * longitudePerPixel;
+
+        // Screen Y increases downward.
+        _centreLatitude += deltaY * latitudePerPixel;
+
+        RebuildMap();
+    }
+
     private void LoadComplete()
     {
         _isLoading = false;
+        
+        RebuildMap();
+    }
+    private void RebuildMap()
+    {
+        if (_isBuildingVertices)
+        {
+            return;
+        }
+
+        _isBuildingVertices = true;
+
+        var latitude = _centreLatitude;
+        
+        var longitude = _centreLongitude;
 
         Task.Run(() =>
         {
-            var ways = _graph.FindWaysInWindow(51.5037567, -3.5642593, 1_000, 1_000);
+            var bounds = MapBounds.FromCentre(latitude, longitude, _viewWidthMetres, _viewHeightMetres);
 
-            var bounds = MapBounds.FromCentre(51.5037567, -3.5642593, 1_000, 1_000);
+            var ways = _graph.FindWaysInWindow(latitude, longitude, _viewWidthMetres, _viewHeightMetres);
 
-            var vertices = BuildRoadVertices(ways, _graph, bounds, WindowWidth, WindowHeight);
+            return BuildRoadVertices(ways, _graph, bounds, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+        }).ContinueWith(task =>
+        {
+            _isBuildingVertices = false;
 
-            _vertices = vertices;
+            if (task.IsFaulted)
+            {
+                Console.WriteLine(task.Exception);
+                
+                return;
+            }
 
-            Console.WriteLine("Done");
+            _vertices = task.Result;
         });
     }
 
@@ -177,7 +256,7 @@ public sealed class Renderer : Game
         _effect.Projection = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);
 
         GraphicsDevice.RasterizerState = AntiAliasedRasterizerState;
-        
+
         foreach (var pass in _effect.CurrentTechnique.Passes)
         {
             pass.Apply();
