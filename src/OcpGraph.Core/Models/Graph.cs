@@ -112,7 +112,12 @@ public class Graph
 
         return FindWaysInBounds(centreLatitude - halfLatitudeDelta, centreLongitude - halfLongitudeDelta, centreLatitude + halfLatitudeDelta, centreLongitude + halfLongitudeDelta);
     }
-    
+
+    public bool TryGetNode(long id, out Node node)
+    {
+        return _nodes.TryGetValue(id, out node);
+    }
+
     private List<Way> FindWaysInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
     {
         var results = new List<Way>();

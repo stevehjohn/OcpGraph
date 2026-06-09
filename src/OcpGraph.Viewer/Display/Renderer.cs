@@ -158,4 +158,9 @@ public sealed class Renderer : Game
             graphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, _vertices.ToArray(), 0, _vertices.Count / 2);
         }
     }
+
+    private static Color GetRoadColour(WayType type)
+    {
+        return Color.Aqua;
+    }
 }
