@@ -28,6 +28,8 @@ public class TextManager
         if (center)
         {
             left -= (int) _font.MeasureString(message).X / 2;
+            
+            top -= (int) _font.MeasureString(message).Y / 2;
         }
 
         for (var y = -2; y < 3; y++)

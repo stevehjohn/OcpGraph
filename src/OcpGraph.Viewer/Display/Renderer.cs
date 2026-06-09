@@ -69,7 +69,13 @@ public sealed class Renderer : Game
 
     protected override void Draw(GameTime gameTime)
     {
+        GraphicsDevice.Clear(Color.Black);
+        
+        _spriteBatch.Begin();
+        
         DrawText();
+        
+        _spriteBatch.End();
         
         base.Draw(gameTime);
     }
@@ -78,7 +84,7 @@ public sealed class Renderer : Game
     {
         if (_isLoading)
         {
-            _textManager.DrawMessage($"Loading ({_graph.LoadProgress})%...", WindowWidth / 2, WindowHeight / 2, Color.White, true);
+            _textManager.DrawMessage($"Loading ({_graph.LoadProgress:N0})%...", WindowWidth / 2, WindowHeight / 2, Color.White, true);
         }
     }
 }
