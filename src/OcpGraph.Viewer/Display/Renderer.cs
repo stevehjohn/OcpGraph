@@ -29,6 +29,13 @@ public sealed class Renderer : Game
         base.Initialize();
     }
 
+    protected override void LoadContent()
+    {
+        Content.RootDirectory = "_Content";
+
+        base.LoadContent();
+    }
+
     protected override void Draw(GameTime gameTime)
     {
         base.Draw(gameTime);
