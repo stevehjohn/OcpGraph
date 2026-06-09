@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,10 +17,14 @@ public sealed class Renderer : Game
     private readonly GraphicsDeviceManager _graphics;
     
     private readonly Graph _graph = new();
-
+    
+    private readonly List<VertexPositionColor> _vertices = [];
+    
     private TextManager _textManager;
     
     private SpriteBatch _spriteBatch;
+
+    private BasicEffect _effect;
 
     private bool _isLoading;
     
@@ -64,6 +69,12 @@ public sealed class Renderer : Game
 
         _textManager = new TextManager(_spriteBatch, Content.Load<SpriteFont>("Font"));
 
+        _effect = new BasicEffect(GraphicsDevice)
+        {
+            VertexColorEnabled = true,
+            LightingEnabled = false
+        };
+        
         base.LoadContent();
     }
 
