@@ -17,6 +17,10 @@ public sealed class Renderer : Game
 
     private const double RebuildDelayMilliseconds = 50;
 
+    private const double MinViewSizeMetres = 100;
+
+    private const double MaxViewSizeMetres = 100_000;
+
     private static readonly RasterizerState AntiAliasedRasterizerState = new()
     {
         CullMode = CullMode.None,
@@ -117,6 +121,13 @@ public sealed class Renderer : Game
             Pan(deltaX, deltaY);
         }
 
+        var wheelDelta = mouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
+
+        if (! _isLoading && wheelDelta != 0)
+        {
+            Zoom(wheelDelta);
+        }
+
         if (_mapDirty)
         {
             _millisecondsSinceMapChanged += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -124,7 +135,7 @@ public sealed class Renderer : Game
             if (_millisecondsSinceMapChanged >= RebuildDelayMilliseconds)
             {
                 _mapDirty = false;
-                
+
                 _millisecondsSinceMapChanged = 0;
 
                 RebuildMap();
@@ -154,6 +165,17 @@ public sealed class Renderer : Game
     private void RequestMapRebuild()
     {
         _mapDirty = true;
+    }
+
+    private void Zoom(int wheelDelta)
+    {
+        var zoomFactor = Math.Pow(0.9, wheelDelta / 120d);
+
+        _viewWidthMetres = Math.Clamp(_viewWidthMetres * zoomFactor, MinViewSizeMetres, MaxViewSizeMetres);
+
+        _viewHeightMetres = Math.Clamp(_viewHeightMetres * zoomFactor, MinViewSizeMetres, MaxViewSizeMetres);
+
+        RequestMapRebuild();
     }
 
     private void Pan(int deltaX, int deltaY)
@@ -187,8 +209,8 @@ public sealed class Renderer : Game
     {
         if (_isBuildingVertices)
         {
-            _mapDirty =  true;
-            
+            _mapDirty = true;
+
             return;
         }
 
@@ -197,12 +219,16 @@ public sealed class Renderer : Game
         var latitude = _centreLatitude;
 
         var longitude = _centreLongitude;
-
+        
+        var viewWidthMetres = _viewWidthMetres;
+        
+        var viewHeightMetres = _viewHeightMetres;
+        
         Task.Run(() =>
         {
-            var bounds = MapBounds.FromCentre(latitude, longitude, _viewWidthMetres, _viewHeightMetres);
+            var bounds = MapBounds.FromCentre(latitude, longitude, viewWidthMetres, viewHeightMetres);
 
-            var ways = _graph.FindWaysInWindow(latitude, longitude, _viewWidthMetres, _viewHeightMetres);
+            var ways = _graph.FindWaysInWindow(latitude, longitude, viewWidthMetres, viewHeightMetres);
 
             return BuildRoadVertices(ways, _graph, bounds, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
         }).ContinueWith(task =>
