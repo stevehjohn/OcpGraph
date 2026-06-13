@@ -95,11 +95,6 @@ public static class OsmToOgcConverter
                 foreach (var item in way.Nodes)
                 {
                     wayWriter.Write7BitEncodedInt64(item);
-
-                    if (way.Type != WayType.NoVehicles)
-                    {
-                        nodeIds.Add(item);
-                    }
                 }
             }
         }
