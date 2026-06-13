@@ -124,6 +124,10 @@ public static class OsmToOgcConverter
                 nodeWriter.Write7BitEncodedInt((int) (node.Latitude * CoordinateScalingFactor));
 
                 nodeWriter.Write7BitEncodedInt((int) (node.Longitude * CoordinateScalingFactor));
+
+                nodeWriter.Write7BitEncodedInt((int) node.Amenity);
+                
+                nodeWriter.Write(node.Name ?? string.Empty);
             }
         }
 
