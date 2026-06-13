@@ -23,7 +23,7 @@ public sealed record MapNode(long Id) : MapObject(Id)
             if (value.ToLowerInvariant() is "pub" or "bar" or "biergarten")
             {
                 Amenity = Amenity.Pub;
-
+                
                 node.Tags.TryGetValue("name", out var name);
 
                 Name = name;

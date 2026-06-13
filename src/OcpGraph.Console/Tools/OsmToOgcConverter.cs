@@ -117,7 +117,7 @@ public static class OsmToOgcConverter
                 WriteLine($"{count:N0} nodes in {stopwatch.Elapsed.TotalSeconds:N2}s, ({provider.Progress:N2}%).");
             }
 
-            if (mapObject is MapNode node && nodeIds.Contains(node.Id))
+            if (mapObject is MapNode node && (nodeIds.Contains(node.Id) || node.Amenity != Amenity.None))
             {
                 nodeWriter.Write7BitEncodedInt64(node.Id);
 
@@ -133,6 +133,8 @@ public static class OsmToOgcConverter
                     {
                         nameWriter.Write7BitEncodedInt(id++);
 
+                        WriteLine(node.Name);
+                        
                         nameWriter.Write(node.Name);
                     }
 
