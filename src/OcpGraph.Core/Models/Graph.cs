@@ -121,19 +121,6 @@ public class Graph
         return FindWaysInBounds(centreLatitude - halfLatitudeDelta, centreLongitude - halfLongitudeDelta, centreLatitude + halfLatitudeDelta, centreLongitude + halfLongitudeDelta);
     }
 
-    public IReadOnlyList<Node> FindNodesInWindow(double centreLatitude, double centreLongitude, double widthMetres, double heightMetres)
-    {
-        const double metresPerDegreeLatitude = 111_320d;
-
-        var halfLatitudeDelta = heightMetres / 2d / metresPerDegreeLatitude;
-
-        var metresPerDegreeLongitude = metresPerDegreeLatitude * Math.Cos(centreLatitude * Math.PI / 180d);
-
-        var halfLongitudeDelta = widthMetres / 2d / metresPerDegreeLongitude;
-
-        return FindNodesInBounds(centreLatitude - halfLatitudeDelta, centreLongitude - halfLongitudeDelta, centreLatitude + halfLatitudeDelta, centreLongitude + halfLongitudeDelta);
-    }
-
     public bool TryGetNode(long id, out Node node)
     {
         return _nodes.TryGetValue(id, out node);
@@ -212,36 +199,6 @@ public class Graph
                     if (seen.Add(way.Id))
                     {
                         results.Add(way);
-                    }
-                }
-            }
-        }
-
-        return results;
-    }
-
-    private List<Node> FindNodesInBounds(double minLatitude, double minLongitude, double maxLatitude, double maxLongitude)
-    {
-        var minCell = GetCell(minLatitude, minLongitude);
-        
-        var maxCell = GetCell(maxLatitude, maxLongitude);
-
-        var results = new List<Node>();
-
-        for (var y = minCell.Y; y <= maxCell.Y; y++)
-        {
-            for (var x = minCell.X; x <= maxCell.X; x++)
-            {
-                if (! _nodesByCell.TryGetValue((x, y), out var nodes))
-                {
-                    continue;
-                }
-
-                foreach (var node in nodes)
-                {
-                    if (node.Latitude >= minLatitude && node.Latitude <= maxLatitude && node.Longitude >= minLongitude && node.Longitude <= maxLongitude)
-                    {
-                        results.Add(node);
                     }
                 }
             }
