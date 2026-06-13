@@ -130,8 +130,6 @@ public static class OsmToOgcConverter
                     {
                         nameWriter.Write7BitEncodedInt(id++);
 
-                        WriteLine(node.Name);
-
                         nameWriter.Write(node.Name);
                     }
 
