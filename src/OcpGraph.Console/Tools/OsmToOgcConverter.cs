@@ -136,8 +136,6 @@ public static class OsmToOgcConverter
                         nameWriter.Write(node.Name);
                     }
 
-                    wayWriter.Write7BitEncodedInt(names[node.Name]);
-
                     nodeWriter.Write7BitEncodedInt(names[node.Name]);
                 }
                 else
