@@ -24,4 +24,4 @@ NameId,Name
 
 ### nodes.ogc
 
-NodeId,Latitude,Longitude
+NodeId,Latitude,Longitude,Amenity,Name
