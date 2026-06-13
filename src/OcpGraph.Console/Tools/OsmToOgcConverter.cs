@@ -95,7 +95,9 @@ public static class OsmToOgcConverter
                 foreach (var item in way.Nodes)
                 {
                     wayWriter.Write7BitEncodedInt64(item);
-                }
+
+                    nodeIds.Add(item);
+                }s
             }
         }
 
@@ -129,7 +131,7 @@ public static class OsmToOgcConverter
                         nameWriter.Write7BitEncodedInt(id++);
 
                         WriteLine(node.Name);
-                        
+
                         nameWriter.Write(node.Name);
                     }
 
