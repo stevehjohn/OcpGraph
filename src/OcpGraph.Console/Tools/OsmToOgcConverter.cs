@@ -97,7 +97,7 @@ public static class OsmToOgcConverter
                     wayWriter.Write7BitEncodedInt64(item);
 
                     nodeIds.Add(item);
-                }s
+                }
             }
         }
 
